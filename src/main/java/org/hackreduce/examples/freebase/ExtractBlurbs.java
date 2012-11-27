@@ -14,11 +14,14 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.Reducer.Context;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.hackreduce.examples.RecordCounter.RecordCounterCount;
 import org.hackreduce.mappers.FreebaseTopicMapper;
 import org.hackreduce.models.FreebaseTopicRecord;
 
@@ -53,6 +56,20 @@ public class ExtractBlurbs extends Configured implements Tool {
 			}
 		}
 	}
+	
+	public static class BlurbWriter extends Reducer<Text, Text, Text, Text> {
+
+		@Override
+		protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+			context.getCounter(RecordCounterCount.UNIQUE_KEYS).increment(1);
+
+			for (Text value : values) {
+				context.write(key, new Text(value));
+			}
+
+		}
+
+	}
 
 
 	public static void main(String[] args) throws Exception {
@@ -80,7 +97,7 @@ public class ExtractBlurbs extends Configured implements Tool {
         job.setMapperClass(ExtractBlurbMapper.class);
         
         // No reducer, we just want to collect all the strings
-        job.setNumReduceTasks(0);
+        job.setNumReduceTasks(10);
 
 		// This is what the Mapper will be outputting
 		job.setMapOutputKeyClass(Text.class);
