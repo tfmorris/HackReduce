@@ -1,0 +1,6 @@
+1	a	3	4	/type1/type11	text1
+2	b	3	4	/type1/type11	text2
+3	c	3	4	/type1/type12	
+4	d	3	4	/type2/type21	text4
+5	d	3	4	/type2/type21	texttext4
+6	d	3	4	/type1/type2,/type2/type21	texttext5

@@ -1,0 +1,8 @@
+MOVED OVER TO EVERNOTE
+Things to try:
+ - run a hadoop job IN PROGRESS
+ - work from R
+ - do machine learning in R
+tfmorris on github
+netwrok tab on github
+
